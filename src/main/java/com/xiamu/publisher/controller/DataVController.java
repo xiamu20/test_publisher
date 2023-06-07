@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSON;
 public class DataVController {
 @Autowired
     MySqlService mySqlService;
-@GetMapping("test_sum")
+@GetMapping("test/test_sum")
     public String TestSum(@RequestParam("start_dt") String startDt,@RequestParam("end_dt") String endDt){
     if(startDt.length()==0|| endDt.length()==0){
         return "error param is null";
