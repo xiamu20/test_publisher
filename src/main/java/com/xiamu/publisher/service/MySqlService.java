@@ -1,8 +1,9 @@
 package com.xiamu.publisher.service;
 
+import com.xiamu.publisher.bean.Sum;
+
 import java.util.List;
-import java.util.Map;
 
 public interface MySqlService {
-public List<Map> getTestSum(String startDt, String endDt);
+public List<Sum> getTestSum(String startDt, String endDt);
 }

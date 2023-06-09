@@ -1,13 +1,13 @@
 package com.xiamu.publisher.mapper;
 
+import com.xiamu.publisher.bean.Sum;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
+
 @Mapper
 public interface TestSumMapper {
-    public List<Map> Sum(@Param("start_Date") String startDate , @Param("end_Date") String endDate);
+    public List<Sum> Sum(@Param("start_Date") String startDate , @Param("end_Date") String endDate);
 
 }
