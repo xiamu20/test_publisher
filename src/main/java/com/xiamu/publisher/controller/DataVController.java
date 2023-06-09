@@ -1,5 +1,6 @@
 package com.xiamu.publisher.controller;
 
+import com.xiamu.publisher.bean.Sum;
 import com.xiamu.publisher.service.MySqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 
 import com.alibaba.fastjson.JSON;
@@ -15,7 +15,8 @@ import com.alibaba.fastjson.JSON;
 public class DataVController {
 @Autowired
     MySqlService mySqlService;
-@GetMapping("test/test_sum")
+//http://localhost:8080/test_sum?start_dt=2022-01-01&end_dt=2022-01-03
+@GetMapping("test_sum")
     public String TestSum(@RequestParam("start_dt") String startDt,@RequestParam("end_dt") String endDt){
     if(startDt.length()==0|| endDt.length()==0){
         return "error param is null";
@@ -23,7 +24,9 @@ public class DataVController {
     startDt=startDt.replace("-","");
     endDt=endDt.replace("-","");
 
-    List<Map> testSum = mySqlService.getTestSum(startDt, endDt);
+    List<Sum> testSum = mySqlService.getTestSum(startDt, endDt);
+    System.out.println(JSON.toJSON(testSum));
+
     return JSON.toJSONString(testSum);
 
 }
