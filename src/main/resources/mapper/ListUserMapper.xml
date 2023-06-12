@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiamu.publisher.mapper.ListUserMapper">
+<select id="UserList" resultType="com.xiamu.publisher.bean.ListUser" parameterType="java.util.List" >
+    SELECT * FROM list_user WHERE uid IN
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+</select>
+
+
+</mapper>
+
