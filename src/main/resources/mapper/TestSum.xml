@@ -6,8 +6,16 @@
         where dt &gt;= #{start_Date}  and dt &lt; #{end_Date}
         group by uid
     </select>
-
     <resultMap id="resultSumMap" type="java.util.Map" autoMapping="true">
     </resultMap>
+
+    <select id="selectLimit" parameterType="map" resultMap="resultSelectLimitMap">
+        select * from`order_info` limit #{startIndex},#{pageSize}
+    </select>
+    <resultMap id="resultSelectLimitMap" type="java.util.Map" autoMapping="true">
+    </resultMap>
+
+
+
 
 </mapper>

@@ -17,14 +17,14 @@ public class DataVController {
     MySqlService mySqlService;
 //http://localhost:8080/test_sum?start_dt=2022-01-01&end_dt=2022-01-03
 @GetMapping("test_sum")
-    public String TestSum(@RequestParam("start_dt") String startDt,@RequestParam("end_dt") String endDt){
-    if(startDt.length()==0|| endDt.length()==0){
+    public String  TestSum( String start_dt,@RequestParam("end_dt") String endDt){
+    if(start_dt.length()==0|| endDt.length()==0){
         return "error param is null";
     }
-    startDt=startDt.replace("-","");
+    start_dt=start_dt.replace("-","");
     endDt=endDt.replace("-","");
 
-    List<Sum> testSum = mySqlService.getTestSum(startDt, endDt);
+    List<Sum> testSum = mySqlService.getTestSum(start_dt, endDt);
     System.out.println(JSON.toJSON(testSum));
 
     return JSON.toJSONString(testSum);

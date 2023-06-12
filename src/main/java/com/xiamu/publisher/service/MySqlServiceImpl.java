@@ -2,6 +2,7 @@ package com.xiamu.publisher.service;
 
 import com.xiamu.publisher.bean.Sum;
 import com.xiamu.publisher.mapper.TestSumMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
