@@ -2,9 +2,20 @@
 <!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xiamu.publisher.mapper.TestSumMapper">
     <select id="Sum"  resultMap="resultSumMap">
-        select uid ,count(1) a from `order_info`
-        where dt &gt;= #{start_Date}  and dt &lt; #{end_Date}
-        group by uid
+        select *  from `order_info`
+        <where>
+            <if test="start_dt!= null">
+           and dt > #{start_dt}
+           </if>
+            <if test="end_dt!=null">
+                and   dt = #{end_dt}
+            </if>
+        </where>
+        ORDER  by uid desc
+
+
+
+
     </select>
     <resultMap id="resultSumMap" type="java.util.Map" autoMapping="true">
     </resultMap>

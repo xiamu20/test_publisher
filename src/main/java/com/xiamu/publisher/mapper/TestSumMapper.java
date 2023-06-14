@@ -8,6 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface TestSumMapper {
-    public List<Sum> Sum(@Param("start_Date") String startDate , @Param("end_Date") String endDate);
+    public List<Sum> Sum(@Param("start_dt") String start_dt , @Param("end_dt") String end_dt);
 
 }
