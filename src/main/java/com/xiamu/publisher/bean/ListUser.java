@@ -27,6 +27,15 @@ public class ListUser {
         this.age = age;
     }
 
+    @Override
+    public String toString() {
+        return "ListUser{" +
+                "uid=" + uid +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
     private Integer uid;
     private String name;
     private Integer age;

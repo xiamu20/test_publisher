@@ -1,0 +1,8 @@
+spring:
+  mail:
+    host: smtp.163.com
+    username: wq13120731020@163.com
+    password: Wq1364554,.
+    port: 25
+
+
