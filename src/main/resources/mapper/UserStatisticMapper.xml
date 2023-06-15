@@ -9,7 +9,7 @@
 
     <!-- 统计用户新增  -->
     <select id="statisticUserCnt" resultMap="countMap">
-        SELECT date_table.day as `day`, IFNULL(data.cnt, 0) as `count`，20230101 as dt
+        SELECT date_table.day as `day`, IFNULL(data.cnt, 0) as `count`,date_table.day as `dt`
         from
         (select DATE_FORMAT(create_time, '%Y-%m-%d') day, count(id) cnt from u1 GROUP BY day) data
         right join

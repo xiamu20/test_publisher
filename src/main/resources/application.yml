@@ -1,4 +1,6 @@
 spring:
+  task:
+    enabled: 0
   #邮箱配置
   mail:
     host: smtp.163.com

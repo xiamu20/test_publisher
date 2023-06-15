@@ -59,6 +59,8 @@ public class StatisticAndReportService {
      */
     @Value("${spring.mail.username}")
     private String account;
+  //  @Value("${task.enabled}") // 通过配置文件读取参数值，例如true表示任务开启，false表示任务关闭
+   // private boolean taskEnabled;
     public void sendMail(String title, String content) throws MessagingException {
         MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true);
@@ -75,15 +77,6 @@ public class StatisticAndReportService {
         // 解决linux上发送邮件时，抛出异常 JavaMailSender no object DCH for MIME type multipart/mixed
         Thread.currentThread().setContextClassLoader(javax.mail.Message.class.getClassLoader());
         javaMailSender.send(mimeMailMessage);
-    }
-    // 定时发送，每天4:15分统计一次，发送邮件
-//  @Scheduled(cron = "0 42 20 * * ?")
-//   下上面这个是每分钟执行一次，用于本地测试
-  @Scheduled(cron = "0/1 * * * * ?")
-    public void autoCalculateUserStatisticAndSendEmail() throws MessagingException {
-        StatisticVo vo = statisticAddUserReport();
-        String content = renderReport(vo);
-        sendMail("新增用户报告", content);
     }
 
 
