@@ -1,7 +1,6 @@
-package com.xiamu.publisher.Redis.redisson;
+package com.xiamu.publisher.redis.redisson;
 
 import org.redisson.api.RBucket;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
 

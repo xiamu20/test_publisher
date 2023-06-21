@@ -18,7 +18,6 @@ public class App {
     public static void main(String[] args) {
 
         SpringApplication.run(App.class,args);
-
     }
     @GetMapping("test")
     public String hello() {

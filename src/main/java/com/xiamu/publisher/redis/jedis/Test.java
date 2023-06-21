@@ -1,4 +1,4 @@
-package com.xiamu.publisher.Redis.Jedis;
+package com.xiamu.publisher.redis.jedis;
 
 public class Test {
     public static void main(String[] args) {

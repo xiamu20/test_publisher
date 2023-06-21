@@ -1,4 +1,4 @@
-package com.xiamu.publisher.Redis.redisson;
+package com.xiamu.publisher.redis.redisson;
 
 import org.redisson.Redisson;
 import org.redisson.config.Config;

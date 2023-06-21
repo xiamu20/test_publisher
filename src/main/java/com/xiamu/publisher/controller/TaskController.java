@@ -1,5 +1,6 @@
 package com.xiamu.publisher.controller;
 
+import com.xiamu.publisher.bean.SelectSwitch;
 import com.xiamu.publisher.mapper.SelectSwitchMapper;
 import com.xiamu.publisher.mapper.UpdateSwitchMapper;
 import com.xiamu.publisher.task.ScheduledDataSendingTask;
@@ -15,19 +16,17 @@ import java.util.List;
 public class TaskController {
 
     @Autowired
-    ScheduledDataSendingTask dataSendingTask;
-    @Autowired
     SelectSwitchMapper selectSwitchMapper;
     @Autowired
     UpdateSwitchMapper updateSwitchMapper;
     @GetMapping("/task/enable")
-    public List<SelectSwitchMapper>  enableTaskState(){
-        List<SelectSwitchMapper> status = selectSwitchMapper.getStatus();
+    public List<SelectSwitch> enableTaskState(){
+        List<SelectSwitch> status = selectSwitchMapper.getStatus();
         return status;
     }
     @PostMapping("/task/enable")
     public String  enableTask(@RequestParam boolean enabled){
-        dataSendingTask.setTaskEnabled(enabled);
+
         if (enabled){
             updateSwitchMapper.updateStatus("开启");
             return "开启";

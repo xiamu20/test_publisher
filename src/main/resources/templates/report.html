@@ -71,7 +71,7 @@
             <tr th:each="item: ${vo.list}">
                 <td class="thead" style="background:#eaeaea;" th:text="${item.day}">2022-08-01</td>
                 <td style="min-width: 50px; color: #4040e1" th:text="${item.count}">1</td>
-                <td style="min-width: 50px; color: #4040e1" th:text="${item.count}">20230101</td>
+                <td class="thead" style="background:#eaeaea;" th:text="${item.dt}">2022-08-01</td>
             </tr>
             </tbody>
         </table>
