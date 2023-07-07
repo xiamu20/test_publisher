@@ -30,6 +30,16 @@ spring:
       content-type: text/html
     cache: false
 
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.git.hui.demo.report.dao.po
+
+  # mybatis 相关配置
+  mybatis:
+    #... 其他配置信息
+    configuration-properties:
+      offsetAsPageNum: true
+      rowBoundsWithCount: true
+      reasonable: true
+    mapper-locations: mybatis/mapper/*.xml

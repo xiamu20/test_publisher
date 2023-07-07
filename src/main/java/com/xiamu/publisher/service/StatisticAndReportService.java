@@ -46,6 +46,7 @@ public class StatisticAndReportService {
         context.setVariable("vo",vo);
         String report = springTemplateEngine.process("report", context);
         System.out.println(report);
+
         return report;
     }
 

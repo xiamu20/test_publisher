@@ -33,9 +33,9 @@ public class ScheduledDataSendingTask {
     SelectSwitchMapper selectSwitchMapper;
     @Autowired
     MyRedissonConfig myRedissonConfig;
-    @Scheduled(fixedRate = 3000) //每3秒
-    //
+   //@Scheduled(fixedRate = 10000) //每10秒
 
+    @Scheduled(cron = "0 1 1 ? * *")
     public void autoCalculateUserStatisticAndSendEmail() throws MessagingException {
         String lockKey="lockKey";
         RLock lock = myRedissonConfig.redisson().getLock(lockKey);

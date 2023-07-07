@@ -6,6 +6,7 @@
 
     <groupId>com.xiamu</groupId>
     <artifactId>test_publisher</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <build>
         <plugins>
@@ -19,6 +20,9 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>aes</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -134,6 +138,13 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.9.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
     </dependencies>
 
 
