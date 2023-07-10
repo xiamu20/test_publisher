@@ -21,7 +21,7 @@ public class PageHelperController {
     @Resource
     PageHelperMapper mapper;
     @PostMapping("/getPageHelper")
-    public PageResult pageInfo(ResponseEntityDto param){
+    public  PageInfo<ResoinseEntityDto> pageInfo(ResponseEntityDto param){
         PageHelper.startPage(param.getPageNum(), param.getPageSize());
         List<ResoinseEntityDto> list = mapper.selectManySelective();
         System.out.println(list.toString());
@@ -30,8 +30,8 @@ public class PageHelperController {
         }
         //
         PageInfo<ResoinseEntityDto> pageInfo = new PageInfo<>(list);
-        PageResult pageResult = PageUtils.getPageResult(pageInfo);
+      //  PageResult pageResult = PageUtils.getPageResult(pageInfo);
 
-        return pageResult;
+        return pageInfo;
     }
 }

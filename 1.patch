@@ -1,0 +1,310 @@
+Index: .idea/libraries/Maven__org_objenesis_objenesis_3_2.xml
+===================================================================
+--- .idea/libraries/Maven__org_objenesis_objenesis_3_2.xml	(revision 3032c5de7e811b1f7c8ec32476584582f9038155)
++++ .idea/libraries/Maven__org_objenesis_objenesis_2_5_1.xml	(date 1687104134572)
+@@ -1,13 +1,13 @@
+ <component name="libraryTable">
+-  <library name="Maven: org.objenesis:objenesis:3.2">
++  <library name="Maven: org.objenesis:objenesis:2.5.1">
+     <CLASSES>
+-      <root url="jar://E:/.m2/repository/org/objenesis/objenesis/3.2/objenesis-3.2.jar!/" />
++      <root url="jar://E:/.m2/repository/org/objenesis/objenesis/2.5.1/objenesis-2.5.1.jar!/" />
+     </CLASSES>
+     <JAVADOC>
+-      <root url="jar://E:/.m2/repository/org/objenesis/objenesis/3.2/objenesis-3.2-javadoc.jar!/" />
++      <root url="jar://E:/.m2/repository/org/objenesis/objenesis/2.5.1/objenesis-2.5.1-javadoc.jar!/" />
+     </JAVADOC>
+     <SOURCES>
+-      <root url="jar://E:/.m2/repository/org/objenesis/objenesis/3.2/objenesis-3.2-sources.jar!/" />
++      <root url="jar://E:/.m2/repository/org/objenesis/objenesis/2.5.1/objenesis-2.5.1-sources.jar!/" />
+     </SOURCES>
+   </library>
+ </component>
+\ No newline at end of file
+Index: src/main/java/com/xiamu/publisher/Redis/Jedis/MyJedisConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/xiamu/publisher/Redis/Jedis/MyJedisConfig.java	(date 1687160567247)
++++ src/main/java/com/xiamu/publisher/Redis/Jedis/MyJedisConfig.java	(date 1687160567247)
+@@ -0,0 +1,21 @@
++package com.xiamu.publisher.Redis.Jedis;
++
++
++import redis.clients.jedis.Jedis;
++
++public class MyJedisConfig {
++   public Jedis getJedis(){
++       Jedis jedis = new Jedis("127.0.0.1",6379);
++
++       return jedis;
++   }
++
++    public static void main(String[] args) {
++        MyJedisConfig myJedisConfig = new MyJedisConfig();
++        myJedisConfig.getJedis().set("test2","test2");
++
++        String test2 = myJedisConfig.getJedis().get("test2");
++        System.out.println(test2);
++
++    }
++}
+Index: src/main/java/com/xiamu/publisher/Redis/redisson/MyRedissonConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/xiamu/publisher/Redis/redisson/MyRedissonConfig.java	(date 1687160163014)
++++ src/main/java/com/xiamu/publisher/Redis/redisson/MyRedissonConfig.java	(date 1687160163014)
+@@ -0,0 +1,20 @@
++package com.xiamu.publisher.Redis.redisson;
++
++import org.redisson.Redisson;
++import org.redisson.config.Config;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++
++@Configuration
++public class MyRedissonConfig {
++    @Bean
++   public Redisson redisson(){
++        Config config = new Config();
++       // config.useClusterServers()
++        config.useSingleServer().setAddress("redis://127.0.0.1:6379");
++
++        Redisson redisson = (Redisson) Redisson.create(config);
++        return redisson;
++    }
++
++}
+Index: src/main/java/com/xiamu/publisher/Redis/redisson/Test.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/xiamu/publisher/Redis/redisson/Test.java	(date 1687161523006)
++++ src/main/java/com/xiamu/publisher/Redis/redisson/Test.java	(date 1687161523006)
+@@ -0,0 +1,22 @@
++package com.xiamu.publisher.Redis.redisson;
++
++import org.redisson.api.RBucket;
++import org.springframework.beans.factory.annotation.Autowired;
++
++import java.util.concurrent.TimeUnit;
++
++public class Test {
++
++    public static void main(String[] args) {
++        String redisKey="redisKey";
++        MyRedissonConfig myRedissonConfig = new MyRedissonConfig();
++        RBucket<Object> bucket = myRedissonConfig.redisson().getBucket(redisKey);
++        Object o = bucket.get();
++        System.out.println("0:"+o);
++        bucket.set(1,10, TimeUnit.SECONDS);
++    }
++
++
++
++}
++
+Index: src/main/java/com/xiamu/publisher/task/ScheduledDataSendingTask.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/xiamu/publisher/task/ScheduledDataSendingTask.java	(revision 3032c5de7e811b1f7c8ec32476584582f9038155)
++++ src/main/java/com/xiamu/publisher/task/ScheduledDataSendingTask.java	(date 1687160163027)
+@@ -1,16 +1,19 @@
+ package com.xiamu.publisher.task;
+ 
+ import com.xiamu.publisher.bean.StatisticVo;
++import com.xiamu.publisher.Redis.redisson.MyRedissonConfig;
+ import com.xiamu.publisher.service.StatisticAndReportService;
++import org.redisson.api.RLock;
+ import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.scheduling.annotation.Scheduled;
+ import org.springframework.stereotype.Component;
+ 
+ import javax.mail.MessagingException;
++import java.util.concurrent.TimeUnit;
+ 
+ @Component
+ public class ScheduledDataSendingTask {
++
+  //   @Value("${task.enabled")// 通过配置文件读取参数值
+     private boolean taskEnabled=false;
+ 
+@@ -21,15 +24,24 @@
+ 
+     @Autowired
+     private StatisticAndReportService statisticAndReportService;
++    @Autowired
++    MyRedissonConfig myRedissonConfig;
+     @Scheduled(fixedRate = 3000) //每3秒
+     //@Scheduled(cron = "0 0 0 * * *") // 每天凌晨执行任务
+     public void autoCalculateUserStatisticAndSendEmail() throws MessagingException {
+-
+-        if (taskEnabled){
+-            StatisticVo vo = statisticAndReportService.statisticAddUserReport();
+-            String content = statisticAndReportService.renderReport(vo);
+-            statisticAndReportService.sendMail("新增用户报告", content);
++        String lockKey="lockKey";
++        RLock lock = myRedissonConfig.redisson().getLock(lockKey);
++        try {
++            lock.lock(10, TimeUnit.SECONDS);
++            if (taskEnabled){
++                StatisticVo vo = statisticAndReportService.statisticAddUserReport();
++                String content = statisticAndReportService.renderReport(vo);
++                statisticAndReportService.sendMail("新增用户报告", content);
++            }
++        }finally {
++            lock.unlock();
+         }
++
+ 
+     }
+ }
+Index: src/main/java/demo/Test.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/demo/Test.java	(date 1687161613055)
++++ src/main/java/demo/Test.java	(date 1687161613055)
+@@ -0,0 +1,31 @@
++package demo;
++
++import com.xiamu.publisher.Redis.redisson.MyRedissonConfig;
++import lombok.Data;
++import org.redisson.api.RLock;
++import org.redisson.api.RedissonClient;
++import org.springframework.stereotype.Component;
++
++import java.util.concurrent.TimeUnit;
++
++@Data
++@Component
++public class Test {
++
++
++    public static void main(String[] args) {
++        MyRedissonConfig myRedissonConfig = new MyRedissonConfig();
++
++        if (false){
++
++            return;
++        }
++       String lockKey ="lockKey";
++        System.out.println("lockKey");
++        RLock lock = myRedissonConfig.redisson().getLock(lockKey);
++        lock.lock(10, TimeUnit.SECONDS);
++        lock.unlock();
++
++
++    }
++}
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision 3032c5de7e811b1f7c8ec32476584582f9038155)
++++ pom.xml	(date 1687140272674)
+@@ -27,6 +27,15 @@
+     </parent>
+     <dependencies>
+         <dependency>
++            <groupId>redis.clients</groupId>
++            <artifactId>jedis</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.redisson</groupId>
++            <artifactId>redisson</artifactId>
++            <version>3.11.1</version>
++        </dependency>
++        <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+             <version>2.7.2</version>
+Index: test_publisher.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_publisher.iml	(revision 3032c5de7e811b1f7c8ec32476584582f9038155)
++++ test_publisher.iml	(date 1687140412890)
+@@ -41,6 +41,33 @@
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />
++    <orderEntry type="library" name="Maven: redis.clients:jedis:3.8.0" level="project" />
++    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
++    <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.11.1" level="project" />
++    <orderEntry type="library" name="Maven: org.redisson:redisson:3.11.1" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.79.Final" level="project" />
++    <orderEntry type="library" name="Maven: javax.cache:cache-api:1.1.1" level="project" />
++    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.21" level="project" />
++    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.4" level="project" />
++    <orderEntry type="library" name="Maven: io.reactivex.rxjava2:rxjava:2.2.21" level="project" />
++    <orderEntry type="library" name="Maven: de.ruedigermoeller:fst:2.57" level="project" />
++    <orderEntry type="library" name="Maven: org.javassist:javassist:3.21.0-GA" level="project" />
++    <orderEntry type="library" name="Maven: org.objenesis:objenesis:2.5.1" level="project" />
++    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3" level="project" />
++    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.13.3" level="project" />
++    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.3" level="project" />
++    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.13.3" level="project" />
++    <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.12.12" level="project" />
++    <orderEntry type="library" name="Maven: org.jodd:jodd-bean:5.0.10" level="project" />
++    <orderEntry type="library" name="Maven: org.jodd:jodd-core:5.0.10" level="project" />
+     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.7.2" level="project" />
+     <orderEntry type="library" name="Maven: org.thymeleaf:thymeleaf-spring5:3.0.15.RELEASE" level="project" />
+     <orderEntry type="library" name="Maven: org.thymeleaf:thymeleaf:3.0.15.RELEASE" level="project" />
+@@ -112,7 +139,6 @@
+     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.2" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:4.5.1" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.12.12" level="project" />
+-    <orderEntry type="library" name="Maven: org.objenesis:objenesis:3.2" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-junit-jupiter:4.5.1" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: org.skyscreamer:jsonassert:1.5.1" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
+@@ -129,30 +155,6 @@
+     <orderEntry type="library" name="Maven: org.mybatis:mybatis-spring:2.0.3" level="project" />
+     <orderEntry type="library" name="Maven: junit:junit:4.13.2" level="project" />
+     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:2.2" level="project" />
+-    <orderEntry type="library" name="Maven: org.redisson:redisson:3.11.1" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-resolver-dns:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-codec-dns:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.79.Final" level="project" />
+-    <orderEntry type="library" name="Maven: javax.cache:cache-api:1.1.1" level="project" />
+-    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.21" level="project" />
+-    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.4" level="project" />
+-    <orderEntry type="library" name="Maven: io.reactivex.rxjava2:rxjava:2.2.21" level="project" />
+-    <orderEntry type="library" name="Maven: de.ruedigermoeller:fst:2.57" level="project" />
+-    <orderEntry type="library" name="Maven: org.javassist:javassist:3.21.0-GA" level="project" />
+-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
+-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3" level="project" />
+-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.13.3" level="project" />
+-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.3" level="project" />
+-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.13.3" level="project" />
+-    <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.12.12" level="project" />
+-    <orderEntry type="library" name="Maven: org.jodd:jodd-bean:5.0.10" level="project" />
+-    <orderEntry type="library" name="Maven: org.jodd:jodd-core:5.0.10" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.3.22" level="project" />
+     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.7.2" level="project" />
+     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.24" level="project" />
