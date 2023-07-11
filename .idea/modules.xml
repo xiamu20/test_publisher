@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/aes/aes.iml" filepath="$PROJECT_DIR$/aes/aes.iml" />
       <module fileurl="file://$PROJECT_DIR$/test_publisher.iml" filepath="$PROJECT_DIR$/test_publisher.iml" />
     </modules>
   </component>

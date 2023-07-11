@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
-//http://localhost:8080/pageHelper/getPageHelper?pageNum=2&pageSize=4
+// post
+// http://localhost:8080/pageHelper/getPageHelper?pageNum=2&pageSize=4&orderBy=dt&descOrAsc=desc
 
 @RestController
 @RequestMapping("/pageHelper")
@@ -21,8 +22,9 @@ public class PageHelperController {
     @Resource
     PageHelperMapper mapper;
     @PostMapping("/getPageHelper")
-    public  PageInfo<ResoinseEntityDto> pageInfo(ResponseEntityDto param){
-        PageHelper.startPage(param.getPageNum(), param.getPageSize());
+    public  PageInfo<ResoinseEntityDto> pageInfo(ResponseEntityDto param,String orderBy,String descOrAsc){
+        String result = result(orderBy, descOrAsc);
+        PageHelper.startPage(param.getPageNum(), param.getPageSize(),result);
         List<ResoinseEntityDto> list = mapper.selectManySelective();
         System.out.println(list.toString());
         if (list.size()==0){
@@ -34,4 +36,20 @@ public class PageHelperController {
 
         return pageInfo;
     }
+
+    public String result(String orderBy,String descOrAsc) {
+
+        if(orderBy.equals("dt")){
+            orderBy = "dt";
+        }
+        if(descOrAsc.equals("desc")){
+            descOrAsc = "desc";
+        }else {
+            descOrAsc = "asc";
+        }
+        String result = orderBy +" " + descOrAsc;
+        return result;
+    }
+
+
 }
