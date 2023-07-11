@@ -20,9 +20,6 @@
             </plugin>
         </plugins>
     </build>
-    <modules>
-        <module>aes</module>
-    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
