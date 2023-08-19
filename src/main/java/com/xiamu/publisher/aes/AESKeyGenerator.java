@@ -1,8 +1,4 @@
 package com.xiamu.publisher.aes;
-
-import org.springframework.beans.factory.annotation.Value;
-
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
